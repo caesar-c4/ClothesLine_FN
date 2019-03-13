@@ -1,0 +1,53 @@
+﻿@model ClothesLine_FN.Models.MasterCategory
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Browse</h3>
+    </div>
+    <div class="panel-body">
+        <h1>This is Partial</h1>
+        @*@foreach (var cat in Model.Categories)
+                {
+                    <ul>
+                        <li>
+                            <a>@Html.DisplayFor(modelItem => cat.Name)</a>
+                        </li>
+                    </ul>
+                }
+            </div>*@
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Brand</h3>
+        </div>
+        <div class="panel-body">
+            @foreach (var cat in Model.Categories)
+            {
+                foreach (var bran in cat.Brands)
+                {
+                    <ul>
+                        <li>
+                            <a>@Html.DisplayFor(modelItem => bran.Name)</a>
+                        </li>
+                    </ul>
+                }
+            }
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Type</h3>
+        </div>
+        <div class="panel-body">
+            @foreach (var cat in Model.Categories)
+            {
+                foreach (var type in cat.Types)
+                {
+                    <ul>
+                        <li>
+                            <a>@Html.DisplayFor(modelItem => type.Name)</a>
+                        </li>
+                    </ul>
+                }
+            }
+        </div>
+    </div>

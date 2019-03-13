@@ -1,0 +1,84 @@
+﻿@model IEnumerable<ClothesLine_FN.Models.TourPackege>
+
+@{
+    ViewBag.Title = "CompareTourPackeges";
+    Layout = "~/Views/Shared/_LayoutPageForUser.cshtml";
+}
+
+<h2>Compare Tour Packeges</h2>
+<p>
+    @Html.ActionLink("Reset List", "ResetCompareTourPackegeList", "AddToCarts", null, new { @class = "btn btn-sm btn-primary" })
+</p>
+@if (Model != null && Model.Count() > 0)
+{
+<table class="table table-bordered table-condensed table-striped table-responsive List-table ">
+    <tr>
+        <td>
+            <b>@Html.DisplayNameFor(model => model.Image)</b>
+        </td>
+        @foreach (var item in Model)
+        {
+            <td>
+                @if (item.Image != null)
+                {
+                    string base64Image = Convert.ToBase64String(item.Image);
+                    string Image = string.Format("data:image/gif;base64,{0}", base64Image);
+                    <img src="@Image" width="250" height="300" />
+                }
+
+            </td>
+        }
+
+    </tr>
+    <tr>
+        <td>
+            <b>Product Name</b>
+        </td>
+        @foreach (var item in Model)
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+
+        }
+
+    </tr>
+    <tr>
+        <td>
+            <b>Category</b>
+        </td>
+        @foreach (var item in Model)
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>
+            <b>Destination Name</b>
+        </td>
+        @foreach (var item in Model)
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationPlace.Name)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>
+            <b>@Html.DisplayNameFor(model => model.Cost)</b>
+        </td>
+        @foreach (var item in Model)
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+        }
+    </tr>
+</table>
+}
+else
+{
+    <h3 style="color:red">List is empty. You need to add first</h3>
+}

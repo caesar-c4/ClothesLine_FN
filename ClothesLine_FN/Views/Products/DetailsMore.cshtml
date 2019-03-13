@@ -1,0 +1,62 @@
+﻿@model ClothesLine_FN.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+    <br />
+    <br />
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3>Product Details</h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-xs-10">
+                <div class="row vertical-align">
+                    <div class="col-xs-6">
+                        @if (Model.Image != null)
+                        {
+                            string base64Image = Convert.ToBase64String(Model.Image);
+                            string Image = string.Format("data:image/gif;base64,{0}", base64Image);
+                            <img class="img-responsive img-thumbnail img-rounded" src="@Image" width="450" height="450" />
+                        }
+                    </div>
+                    <div class="col-xs-6">
+                        <table class="table table-responsive">
+                            <tr>
+                                <td><h4>Product Name</h4></td>
+                                <td><h4>@Html.DisplayFor(model => model.Name)</h4></td>
+                            </tr>
+                            <tr>
+                                <td><h4>Brand Name</h4></td>
+                                <td><h4>@Html.DisplayFor(model => model.Brand.Name)</h4></td>
+                            </tr>
+                            <tr>
+                                <td><h4>Type Name</h4></td>
+                                <td><h4>@Html.DisplayFor(model => model.Type.Name)</h4></td>
+                            </tr>
+
+                            <tr>
+                                <td><h4>@Html.DisplayNameFor(model => model.Feature)</h4></td>
+                                <td><h4>@Html.DisplayFor(model => model.Feature)</h4></td>
+                            </tr>
+                            <tr>
+                                <td><h4>@Html.DisplayNameFor(model => model.Description)</h4></td>
+                                <td><h4>@Html.DisplayFor(model => model.Description)</h4></td>
+                            </tr>
+                            <tr style="color:darkgreen">
+                                <td><h4><b>@Html.DisplayNameFor(model => model.Price)</b></h4></td>
+                                <td><h4><b>@Html.DisplayFor(model => model.Price)</b></h4></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "EditMore", new { id = Model.Id }, new { @class = "btn btn-sm btn-primary" })
+    @Html.ActionLink("Back to List", "IndexMore", null, new { @class = "btn btn-sm btn-info" })
+</p>

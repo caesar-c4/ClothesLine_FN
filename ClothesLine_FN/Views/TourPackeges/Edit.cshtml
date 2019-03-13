@@ -1,0 +1,118 @@
+﻿@model ClothesLine_FN.Models.TourPackege
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm("Edit", "TourPackeges", FormMethod.Post, new { enctype = "multipart/form-data", id = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>TourPackege</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryId, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CategoryId", null, "--Select--", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DestinationPlaceId, "Destination Place", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("DestinationPlaceId", null, "--Select--", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DestinationPlaceId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, "Package Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HotelName, "Hotel Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HotelName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HotelName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Cost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-8">
+                <input type="file" name="ImageFile" id="Image" />
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+                <br />
+                @if (Model.Image != null)
+                {
+                    string base64Image = Convert.ToBase64String(Model.Image);
+                    string Image = string.Format("data:image/gif;base64,{0}", base64Image);
+                    <img src="@Image" class="img-responsive" id="TargetImage" height="150" width="150" />
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        //this is for showing image immediately:
+        $("#Image").change(function () {
+            var file = this.files;
+            if (file && file[0]) {
+                ReadImage(file[0]);
+            }
+        });
+        var ReadImage = function (file) {
+            var reader = new FileReader;
+            var image = new Image;
+            reader.readAsDataURL(file);
+            reader.onload = function (_file) {
+                image.src = _file.target.result;
+                $("#TargetImage").attr("src", _file.target.result);
+                image.onload = function () {
+                    var height = this.height;
+                    var width = this.width;
+                    var type = file.type;
+
+                    var value = (file.size / 1024)
+                    var size = Math.round(value * 100) / 100 + " KB";
+
+                    $("#TargetImage").attr("src", _file.target.result);
+                    $("#Imagedescription").html("Size: " + size + '</br>' + "Dimension: " + height + " × " + width);
+                    $("#imagePreview").show();
+                }
+            }
+        }
+    </script>
+}

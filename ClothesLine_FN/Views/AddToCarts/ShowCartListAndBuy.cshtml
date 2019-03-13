@@ -1,0 +1,171 @@
+﻿@model ClothesLine_FN.Models.UserInfo
+
+@{
+    ViewBag.Title = "ShowCartListAndBuy";
+    Layout = "~/Views/Shared/_LayoutPageForUser.cshtml";
+}
+
+<h2>Cart List And Buy</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Please submit your information</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EmailOrPhone, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.EmailOrPhone, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.EmailOrPhone, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Gander, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @{
+                                    List<SelectListItem> items = new List<SelectListItem>()
+                                                                                                                        {
+                                                                                                                          new SelectListItem() {Text = "Male"},
+                                                                                                                          new SelectListItem() {Text = "Female"},
+                                                                                                                        };
+                                }
+                                @Html.DropDownListFor(model => model.Gander, items, "Select Gender", htmlAttributes: new { id = "Gender", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Gander, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Profession, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Profession, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Profession, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-8">
+                                @Html.TextAreaFor(model => model.Address, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-8">
+                                <input type="submit" value="Buy" class="btn btn-primary btn-block" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your added Items</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8">
+                                <table class="table table-bordered table-condensed table-striped table-responsive List-table ">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Image
+                                            </th>
+                                            <th>
+                                                Product Name
+                                            </th>
+                                            <th>
+                                                Quantity
+                                            </th>
+                                            <th>
+                                                Price
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.CartProducts != null && Model.CartProducts.Count > 0)
+                                        {
+                                            foreach (var item in Model.CartProducts)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @if (item.Image != null)
+                                                        {
+                                                            string base64Image = Convert.ToBase64String(item.Image);
+                                                            string Image = string.Format("data:image/gif;base64,{0}", base64Image);
+                                                            <img src="@Image" width="100" height="100" />
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Qty)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Price)
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td></td>
+                                                <td><b>Total :</b></td>
+                                                @{
+                                                    decimal sum = 0;
+                                                    foreach (var item in Model.CartProducts)
+                                                    {
+
+                                                        sum = sum + item.Price * (decimal)item.Qty;
+                                                    }
+                                                    <td>
+                                                        <b>
+                                                            @(sum)
+                                                        </b>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="4" style="text-align:center"><h4>Your cart is empty</h4></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

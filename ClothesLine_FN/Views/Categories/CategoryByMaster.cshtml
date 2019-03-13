@@ -1,0 +1,147 @@
+﻿@model ClothesLine_FN.Models.MasterCategory
+
+@{
+    ViewBag.Title = "CategoryByMaster";
+    Layout = "~/Views/Shared/_LayoutPageForUser.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div id="SearchingContent" style="margin-top:2px">
+            <div class="panel panel-primary skin-blue">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Browse</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <ul>
+                            <li>
+                                <a href="#" id="GetCategoryId" data-Id="@cat.Id">@Html.DisplayFor(modelItem => cat.Name)</a>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Brand</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var item in Model.Categories)
+                    {
+                        foreach (var bran in item.Brands)
+                        {
+                            <ul>
+                                <li>
+                                    <a href="#" id="GetBrandId" data-Id="@bran.Id">@Html.DisplayFor(modelItem => bran.Name)</a>
+                                </li>
+                            </ul>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Type</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var item in Model.Categories)
+                    {
+                        foreach (var type in item.Types)
+                        {
+                            <ul>
+                                <li>
+                                    <a href="#" id="GetTypeId" data-Id="@type.Id">@Html.DisplayFor(modelItem => type.Name)</a>
+                                </li>
+                            </ul>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Price</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var price in Model.Prices)
+                    {
+                        <ul>
+                            <li>
+                                <a href="#" id="GetPriceId" data-Id="@price.Id">@Html.DisplayFor(modelItem => price.PriceRangeName)</a>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div id="ProductDiv">
+            @foreach (var item in Model.Categories)
+            {
+                foreach (var bran in item.Brands)
+                {
+                    foreach (var product in bran.Products)
+                    {
+                        <div class="index-content col-md-3" style="margin-left:2%">
+                            <a href="#" id="Id" data-Id="@product.Id">
+                                <div class="card">
+                                    @if (product.Image != null)
+                                    {
+                                        string base64Image = Convert.ToBase64String(product.Image);
+                                        string Image = string.Format("data:image/gif;base64,{0}", base64Image);
+                                        <img src="@Image" class="img-responsive img-thumbnail" height="150" width="150" />
+                                    }
+                                    <h4>@Html.DisplayFor(modelItem => product.Name)</h4>
+                                    <p>@Html.DisplayFor(modelItem => product.Price)</p>
+                                    <button id="Id" data-Id="@product.Id" class="blue-button">View</button>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+<footer>
+    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+</footer>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/ProjectScripts/MasterCategory/GetSearchContent.js"></script>
+    <script>
+        $(document.body).on("click", "#GetBrandId", function () {
+            var Id = $(this).attr("data-Id");
+            var url = "/../../Products/ProductsByBrand";
+            var params = { id: Id };
+            $.get(url, params, function (rData) {
+                if (rData != undefined && rData != "") {
+                    $("#ProductDiv").html(rData);
+                }
+            });
+        });
+
+        $(document.body).on("click", "#GetTypeId", function () {
+            var Id = $(this).attr("data-Id");
+            var url = "/../../Products/ProductsByType";
+            var params = { id: Id };
+            $.get(url, params, function (rData) {
+                if (rData != undefined && rData != "") {
+                    $("#ProductDiv").html(rData);
+                }
+            });
+        });
+        $(document.body).on("click", "#GetPriceId", function () {
+            var Id = $(this).attr("data-Id");
+            var url = "/../../Products/ProductsByPrice";
+            var params = { id: Id };
+            $.get(url, params, function (rData) {
+                if (rData != undefined && rData != "") {
+                    $("#ProductDiv").html(rData);
+                }
+            });
+        });
+    </script>
+}

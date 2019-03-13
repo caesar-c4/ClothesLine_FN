@@ -1,0 +1,33 @@
+﻿@model ClothesLine_FN.Models.Brand
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Brand Details</h2>
+
+<div>
+    <h4></h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Brand Category
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+
+        <dt>
+            Brand Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index",null, new { @class = "btn btn-info" })
+</p>

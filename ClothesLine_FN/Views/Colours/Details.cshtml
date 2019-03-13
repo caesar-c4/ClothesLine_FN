@@ -1,0 +1,35 @@
+﻿@model ClothesLine_FN.Models.Colour
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Colour</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Master Category
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MasterCategory.Name)
+        </dd>
+
+        <dt>
+            Colour Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ColourName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

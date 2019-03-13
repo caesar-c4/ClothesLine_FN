@@ -1,0 +1,280 @@
+﻿@model ClothesLine_FN.Models.MasterCategory
+
+@{
+    ViewBag.Title = "CategoryByFood";
+    Layout = "~/Views/Shared/_LayoutPageForUser.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div id="SearchingContent" style="margin-top:5px">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Browse</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <ul>
+                            <li>
+                                <a href="#" id="GetCategoryId" data-Id="@cat.Id">@Html.DisplayFor(modelItem => cat.Name)</a>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Brand</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var item in Model.Categories)
+                    {
+
+                        foreach (var bran in item.Brands)
+                        {
+                            <ul>
+                                <li>
+                                    <a href="#" id="GetBrandId" data-Id="@bran.Id">@Html.DisplayFor(modelItem => bran.Name)</a>
+                                </li>
+                            </ul>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Type</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var item in Model.Categories)
+                    {
+                        foreach (var type in item.Types)
+                        {
+                            <ul>
+                                <li>
+                                    <a href="#" id="GetTypeId" data-Id="@type.Id">@Html.DisplayFor(modelItem => type.Name)</a>
+                                </li>
+                            </ul>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Price</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var price in Model.Prices)
+                    {
+                        <ul>
+                            <li>
+                                <a href="#" id="GetPriceId" data-Id="@price.Id">@Html.DisplayFor(modelItem => price.PriceRangeName)</a>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div id="ProductDiv">
+            @foreach (var item in Model.Categories)
+            {
+                foreach (var bran in item.Brands)
+                {
+                    foreach (var product in bran.Products)
+                    {
+                        <div class="index-content col-md-3" style="margin-left:2%">
+                            <button id="CompareId" onclick="GetCompareId(@product.Id)" class="btn btn-primary btn-block">Compare</button>
+                            <a href="#" id="Id" data-Id="@product.Id">
+                                <div class="card">
+                                    @if (product.Image != null)
+                                    {
+                                        string base64Image = Convert.ToBase64String(product.Image);
+                                        string Image = string.Format("data:image/gif;base64,{0}", base64Image);
+                                        <img src="@Image" class="img-responsive img-thumbnail" height="150" width="150" />
+                                    }
+                                    <h4>@Html.DisplayFor(modelItem => product.Name)</h4>
+                                    <p>@Html.DisplayFor(modelItem => product.Price)</p>
+                                    <button id="Id" data-Id="@product.Id" class="blue-button">View</button>
+                                </div>
+                            </a>
+                            <button id="btnCart" onclick="GetCartId(@product.Id)" class="btn btn-primary btn-block">Add to Cart</button>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>
+<footer>
+    <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+</footer>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                <h2 class="modal-title">Cart Add Cofirmation</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-md-2">Quantity</label>
+                    <div class="col-md-10">
+                        <input type="text" id="Qty" class="form-control" />
+                        <label style="color:red" hidden id="validId">Quantity is required</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <input type="button" class="btn btn-danger" value="Yes" id="btnConfirmAdd" />
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Hidden("CartId")
+@Html.Hidden("Qty")
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+          var GetCompareId = function (Id) {
+            var CompareId = Id;
+            $.ajax({
+                url: "/AddToCarts/AddToCompare",
+                data: { id: CompareId },
+                method: "post",
+                success: function (response) {
+                    if (response == 1) {
+                        $.toast({
+                            text: "This product  is added to compare list successfully ", // Text that is to be shown in the toast
+                            heading: 'Compare List', // Optional heading to be shown on the toast
+                            icon: 'success', // Type of toast icon
+                            showHideTransition: 'plain', // fade, slide or plain
+                            allowToastClose: true, // Boolean value true or false
+                            hideAfter: 3000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+                            stack: 5, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                            position: 'top-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+
+                            textAlign: 'left',  // Text alignment i.e. left, right or center
+                            loader: false,  // Whether to show loader or not. True by default
+                            loaderBg: '#9EC600',  // Background color of the toast loader
+                            beforeShow: function () { }, // will be triggered before the toast is shown
+                            afterShown: function () { }, // will be triggered after the toat has been shown
+                            beforeHide: function () { }, // will be triggered before the toast gets hidden
+                            afterHidden: function () { }  // will be triggered after the toast has been hidden
+                        });
+                    }
+                    if (response == 0) {
+                        $.toast({
+                            text: "You can't put more then 3 product at a time of the same category", // Text that is to be shown in the toast
+                            heading: 'Compare List', // Optional heading to be shown on the toast
+                            icon: 'error', // Type of toast icon
+                            showHideTransition: 'plain', // fade, slide or plain
+                            allowToastClose: true, // Boolean value true or false
+                            hideAfter: 3000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+                            stack: 5, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                            position: 'top-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+
+                            textAlign: 'left',  // Text alignment i.e. left, right or center
+                            loader: false,  // Whether to show loader or not. True by default
+                            loaderBg: '#9EC600',  // Background color of the toast loader
+                            beforeShow: function () { }, // will be triggered before the toast is shown
+                            afterShown: function () { }, // will be triggered after the toat has been shown
+                            beforeHide: function () { }, // will be triggered before the toast gets hidden
+                            afterHidden: function () { }  // will be triggered after the toast has been hidden
+                        });
+                    }
+                }
+            })
+        }
+
+        var GetCartId = function (Id) {
+            $("#validId").hide();
+            $("#CartId").val(Id);
+            $("#myModal").modal("show");
+        }
+        $("#btnConfirmAdd").on("click", function () {
+            var cartId = $("#CartId").val();
+            var Qty = $("#Qty").val();
+            if (Qty == undefined || Qty == "") {
+                $("#validId").show();
+            }
+            else {
+                $.ajax({
+                    url: "/AddToCarts/AddToCart",
+                    data: {
+                        id: cartId,
+                        qty: Qty
+                    },
+                    method: "post",
+                    success: function (response) {
+                        if (response == 1) {
+                            $("#myModal").modal("hide");
+                        }
+                    }
+                })
+            }
+        });
+
+        $(document.body).on("click", "#Id", function () {
+            var Id = $(this).attr("data-Id");
+            var url = "/../../Products/FoodPartialDetail";
+            var params = { id: Id };
+            $.get(url, params, function (rData) {
+                if (rData != undefined && rData != "") {
+                    $("#ProductDiv").html(rData);
+                }
+            });
+        });
+        $(document.body).on("click", "#GetCategoryId", function () {
+            var Id = $(this).attr("data-Id");
+            var url = "/../../Products/FoodsByCategoriy";
+            var params = { id: Id };
+            $.get(url, params, function (rData) {
+                if (rData != undefined && rData != "") {
+                    $("#ProductDiv").html(rData);
+                }
+            });
+        });
+
+        $(document.body).on("click", "#GetBrandId", function () {
+            var Id = $(this).attr("data-Id");
+            var url = "/../../Products/FoodsByBrand";
+            var params = { id: Id };
+            $.get(url, params, function (rData) {
+                if (rData != undefined && rData != "") {
+                    $("#ProductDiv").html(rData);
+                }
+            });
+        });
+
+        $(document.body).on("click", "#GetTypeId", function () {
+            var Id = $(this).attr("data-Id");
+            var url = "/../../Products/FoodsByType";
+            var params = { id: Id };
+            $.get(url, params, function (rData) {
+                if (rData != undefined && rData != "") {
+                    $("#ProductDiv").html(rData);
+                }
+            });
+        });
+
+        $(document.body).on("click", "#GetPriceId", function () {
+            var Id = $(this).attr("data-Id");
+            var url = "/../../Products/FoodsByPrice";
+            var params = { id: Id };
+            $.get(url, params, function (rData) {
+                if (rData != undefined && rData != "") {
+                    $("#ProductDiv").html(rData);
+                }
+            });
+        });
+    </script>
+}
